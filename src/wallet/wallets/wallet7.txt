@@ -1,0 +1,4 @@
+=== NTR WALLET #7 ===
+Private key: f612226037e87bcbf37d9891a25de0f215c4b7d94e282cc3c1fa38d50e3e6d14
+Public key: 04869c5fe13c7b382feee29c1f75ade90d392009826a9d220ed5d706d9d1354c54ae60db03c68e3f66422f258c825fda6fd10ed74537cf0a9a95e9207711f3ba08
+Address: ntr1q20v4znz9egz5nndennq9yjx9yh3j42gal7cw7
