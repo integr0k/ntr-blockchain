@@ -31,7 +31,6 @@ void handle_send_command() {
     std::getline(std::cin, to_address);
     to_address.erase(std::remove(to_address.begin(), to_address.end(), ' '), to_address.end());
 
-    // Весь твой try-catch теперь живет локально здесь
     try {
         if (to_address.size() != 42) {
             throw std::runtime_error("Error: NTR address is incorrect. " + std::to_string(to_address.size()) + " bytes.");
@@ -42,11 +41,10 @@ void handle_send_command() {
 
         try {
             int amount_to_send = std::stoi(amount_str);
-            if (amount_to_send > 1) { // Твоя проверка баланса
+            if (amount_to_send > 1) {
                 throw std::runtime_error("Oops! You don't have the required amount of NTR.");
             }
             
-            // Если ошибок нет — выполняем отправку
             std::cout << "Successfully sent " << amount_to_send << " NTR!" << std::endl;
 
         } catch (const std::invalid_argument&) {
@@ -56,7 +54,11 @@ void handle_send_command() {
     catch(const std::exception& e) {
         std::cout << e.what() << std::endl; 
     }
-    // Функция завершилась, мы автоматически возвращаемся в меню!
+}
+
+void handle_mining_command() {
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::cout << "Mining process initialization..." << std::endl;
 }
 
 int main() {
@@ -102,7 +104,6 @@ int main() {
             std::string selected_wallet = (dir / wallets[choice - 1]).string();
             std::cout << "Selected wallet: " << selected_wallet << "\n" << std::endl;
 
-            // 2. В ЦИКЛ МЫ ОБОРАЧИВАЕМ ТОЛЬКО ВЫБОР ДЕЙСТВИЙ (МЕНЮ)
             while (true) {
                 std::string move;
                 std::cout << "Select move: 'send', 'mining', 'get', 'exit'" << std::endl;
@@ -114,14 +115,14 @@ int main() {
 
                 if (move == "exit") {
                     std::cout << "Closing wallet..." << std::endl;
-                    break; // Выход из цикла и завершение программы
+                    break;
                 }
 
                 if (move == "send") {
-                    handle_send_command(); // Просто вызываем функцию! Она отработает, поймает ошибки и вернет нас сюда.
+                    handle_send_command();
                 }
                 else if (move == "mining") {
-                    std::cout << "Mining process initialization..." << std::endl;
+                    handle_mining_command();
                 }
                 else if (move == "get") {
                     std::string private_key, public_key, address;
@@ -134,7 +135,7 @@ int main() {
                 else {
                     std::cout << "Error: incorrect move. Try again." << std::endl;
                 }
-                std::cout << std::endl; // Пустая строка для красоты между командами
+                std::cout << std::endl;
             }
         } else {
             std::cout << "Error: invalid wallet choice." << std::endl;
