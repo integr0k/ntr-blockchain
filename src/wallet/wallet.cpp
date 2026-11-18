@@ -1,5 +1,4 @@
 #include "wallet.hpp"
-
 #include <array>
 #include <filesystem>
 #include <fstream>
@@ -274,6 +273,34 @@ std::string Wallet::get_public_key_hex() const {
 
 std::string Wallet::get_address() const {
     return NTR_address_str;
+}
+
+std::string Wallet::address_from_public_key_hex(const std::string& public_key_hex) {
+    if (public_key_hex.empty() || public_key_hex.size() % 2 != 0) {
+        return {};
+    }
+
+    std::vector<unsigned char> public_key;
+    try {
+        for (std::size_t i = 0; i < public_key_hex.size(); i += 2) {
+            public_key.push_back(static_cast<unsigned char>(
+                std::stoul(public_key_hex.substr(i, 2), nullptr, 16)));
+        }
+    } catch (const std::exception&) {
+        return {};
+    }
+
+    std::array<unsigned char, SHA256_DIGEST_LENGTH> sha256_result{};
+    std::array<unsigned char, RIPEMD160_DIGEST_LENGTH> ripemd160_result{};
+    SHA256(public_key.data(), public_key.size(), sha256_result.data());
+    RIPEMD160(sha256_result.data(), sha256_result.size(), ripemd160_result.data());
+
+    std::vector<unsigned char> hash160(ripemd160_result.begin(), ripemd160_result.end());
+    std::vector<unsigned char> data;
+    if (!convert_bits(hash160, 8, 5, true, data)) {
+        return {};
+    }
+    return bech32_encode("ntr", data);
 }
 
 // int main()

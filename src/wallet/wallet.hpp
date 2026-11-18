@@ -1,6 +1,5 @@
 #ifndef WALLET_HPP
 #define WALLET_HPP
-
 #include <array>
 #include <cstdint>
 #include <string>
@@ -20,16 +19,16 @@ private:
     std::string public_key_hex;
     std::string NTR_address_str;
 
-    void b32_polymod_step(uint32_t& chk);
+    static void b32_polymod_step(uint32_t& chk);
 
-    bool convert_bits(const std::vector<unsigned char>& in_data,
-                      int from_bits,
-                      int to_bits,
-                      bool pad,
-                      std::vector<unsigned char>& out_data);
+    static bool convert_bits(const std::vector<unsigned char>& in_data,
+                             int from_bits,
+                             int to_bits,
+                             bool pad,
+                             std::vector<unsigned char>& out_data);
 
-    std::string bech32_encode(const std::string& htr,
-                              const std::vector<unsigned char>& data);
+    static std::string bech32_encode(const std::string& htr,
+                                     const std::vector<unsigned char>& data);
 
     bool generate_private_key();
     bool generate_public_key();
@@ -45,6 +44,7 @@ public:
     std::string get_private_key_hex() const;
     std::string get_public_key_hex() const;
     std::string get_address() const;
+    static std::string address_from_public_key_hex(const std::string& public_key_hex);
 };
 
 #endif

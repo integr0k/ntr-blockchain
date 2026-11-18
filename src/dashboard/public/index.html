@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#eef1ed">
+  <title>NTR / Mining floor</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="NTR network dashboard">
+        <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span class="brand-name">NTR <small>NETWORK</small></span>
+      </a>
+      <div class="topbar-right">
+        <span class="network-name">LOCAL TESTNET <b id="connection-state">SYNCING</b></span>
+        <span class="live-indicator"><i></i> LIVE</span>
+      </div>
+    </header>
+
+    <main>
+      <section class="page-head">
+        <div>
+          <div class="eyebrow"><span class="eyebrow-line"></span> NODE CONSOLE / 01</div>
+          <h1>Mining floor</h1>
+        </div>
+        <div class="head-meta"><span id="clock">--:--:--</span><span>POW · SHA-256</span></div>
+      </section>
+
+      <section class="metric-row" aria-label="Network statistics">
+        <article class="metric metric-primary">
+          <span class="metric-label">CHAIN HEIGHT</span>
+          <strong id="chain-height">0</strong>
+          <span class="metric-note"><i class="tiny-dot green"></i> GENESIS ONLINE</span>
+        </article>
+        <article class="metric">
+          <span class="metric-label">HASH RATE</span>
+          <strong><span id="hash-rate">0</span><small> H/s</small></strong>
+          <span class="metric-note">CURRENT WORKER</span>
+        </article>
+        <article class="metric">
+          <span class="metric-label">TOTAL MINTED</span>
+          <strong><span id="minted">0.00</span><small> NTR</small></strong>
+          <span class="metric-note"><span id="blocks-count">1</span> BLOCKS RECORDED</span>
+        </article>
+        <article class="metric metric-last">
+          <span class="metric-label">PEER STATUS</span>
+          <strong><span id="peer-count">0</span><small> / <span id="peer-total">0</span></small></strong>
+          <span class="metric-note">TCP REACHABLE</span>
+        </article>
+      </section>
+
+      <section class="mining-panel" aria-labelledby="mining-title">
+        <div class="mining-main">
+          <div class="panel-kicker"><span class="pulse-dot" id="miner-pulse"></span> WORKER <span id="miner-state">STANDBY</span></div>
+          <div class="mining-title-row">
+            <div>
+              <h2 id="mining-title">Proof of work</h2>
+              <p>Block <span id="candidate-height">#1</span><span class="separator">/</span>target <span id="difficulty-label">0000</span></p>
+            </div>
+            <button class="button button-lime" id="toggle-mining" type="button">Start mining <span aria-hidden="true">↗</span></button>
+          </div>
+          <div class="work-progress" role="progressbar" aria-label="Expected proof-of-work progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+            <span id="progress-fill"></span>
+          </div>
+          <div class="work-meta"><span>NONCE <b id="nonce">0</b></span><span><b id="progress-label">0.0%</b> EXPECTED WORK</span></div>
+          <div class="candidate-hash" id="candidate-hash">waiting for miner</div>
+        </div>
+        <div class="mining-side">
+          <label for="miner-address">PAYOUT ADDRESS</label>
+          <div class="address-entry">
+            <input id="miner-address" type="text" spellcheck="false" autocomplete="off" aria-label="Miner payout address">
+            <button id="apply-address" type="button" title="Apply payout address">Apply</button>
+          </div>
+          <div class="side-rule"></div>
+          <div class="reward-line"><span>BLOCK REWARD</span><strong>50.00 <small>NTR</small></strong></div>
+          <div class="reward-line"><span>LAST PAYOUT</span><strong id="last-payout">—</strong></div>
+          <div class="reward-address" id="last-payout-address">Waiting for first block</div>
+        </div>
+      </section>
+
+      <section class="wallet-manager" aria-labelledby="wallet-manager-title">
+        <div class="section-heading wallet-heading">
+          <div><div class="eyebrow">LOCAL KEYSTORE</div><h2 id="wallet-manager-title">Wallet manager</h2></div>
+          <button class="button button-dark" id="create-wallet" type="button"><span aria-hidden="true">+</span> New wallet</button>
+        </div>
+        <div class="wallet-grid">
+          <div class="wallet-selection">
+            <label for="wallet-select">SENDING WALLET</label>
+            <select id="wallet-select" aria-label="Select sending wallet"></select>
+            <div class="wallet-balance-row">
+              <span>AVAILABLE BALANCE</span>
+              <strong id="wallet-balance">0.00 <small>NTR</small></strong>
+            </div>
+            <div class="wallet-address-row">
+              <span>PUBLIC ADDRESS</span>
+              <div><code id="wallet-address">Select a wallet</code><button id="copy-wallet-address" type="button" title="Copy public address" aria-label="Copy public address">⧉</button></div>
+            </div>
+          </div>
+          <form class="transaction-form" id="wallet-send-form">
+            <div class="eyebrow">NEW TRANSACTION</div>
+            <label for="wallet-recipient">RECIPIENT ADDRESS</label>
+            <input id="wallet-recipient" type="text" placeholder="ntr1…" spellcheck="false" autocomplete="off" required>
+            <div class="amount-submit-row">
+              <div class="amount-field">
+                <label for="wallet-amount">AMOUNT · NTR</label>
+                <input id="wallet-amount" type="number" min="0.000001" step="0.000001" placeholder="0.00" required>
+              </div>
+              <button class="button button-lime" type="submit">Send transaction <span aria-hidden="true">↗</span></button>
+            </div>
+          </form>
+        </div>
+        <div class="mempool-heading"><span class="eyebrow">LOCAL MEMPOOL</span><span class="table-count" id="mempool-count">0 PENDING</span></div>
+        <div class="mempool-list" id="mempool-list"><div class="empty-row">No pending wallet transactions</div></div>
+      </section>
+
+      <section class="chart-panel">
+        <div class="section-heading">
+          <div><div class="eyebrow">WORKER TELEMETRY</div><h2>Hash rate</h2></div>
+          <span class="chart-current"><i></i><b id="chart-current">0 H/s</b><small>LIVE</small></span>
+        </div>
+        <div class="chart-wrap"><canvas id="hash-chart" aria-label="Live hash rate history" role="img"></canvas></div>
+        <div class="chart-axis"><span>48 SEC AGO</span><span>24 SEC AGO</span><span>NOW</span></div>
+      </section>
+
+      <div class="lower-grid">
+        <section class="ledger-panel">
+          <div class="section-heading ledger-heading">
+            <div><div class="eyebrow">IMMUTABLE LEDGER</div><h2>Recent blocks</h2></div>
+            <span class="table-count" id="table-count">0 RECORDS</span>
+          </div>
+          <div class="table-scroll">
+            <table>
+              <thead><tr><th>HEIGHT</th><th>BLOCK HASH</th><th>MINER</th><th>REWARD</th><th>TIME</th></tr></thead>
+              <tbody id="blocks-table"><tr><td class="empty-row" colspan="5">Loading ledger…</td></tr></tbody>
+            </table>
+          </div>
+        </section>
+
+        <aside class="side-column">
+          <section class="balances-panel">
+            <div class="section-heading compact-heading">
+              <div><div class="eyebrow">PRECOMPUTED INDEX</div><h2>Balances</h2></div>
+              <span class="tiny-count" id="balance-count">0</span>
+            </div>
+            <div class="balance-list" id="balances-list"><div class="empty-row">No payouts yet</div></div>
+          </section>
+
+          <section class="peers-panel">
+            <div class="section-heading compact-heading">
+              <div><div class="eyebrow">TCP ENDPOINTS</div><h2>Peer registry</h2></div>
+              <span class="peer-total-tag" id="peer-total-tag">0 NODES</span>
+            </div>
+            <form class="peer-form" id="peer-form">
+              <label class="visually-hidden" for="peer-host">Peer host</label>
+              <input id="peer-host" type="text" placeholder="127.0.0.1" maxlength="253" required>
+              <label class="visually-hidden" for="peer-port">Peer port</label>
+              <input id="peer-port" type="number" placeholder="PORT" min="1" max="65535" value="8333" required>
+              <button type="submit" aria-label="Add peer">+</button>
+            </form>
+            <div class="peer-list" id="peer-list"><div class="empty-row">No peer endpoints</div></div>
+            <div class="peer-legend"><span><i class="status-dot connected"></i> TCP online</span><span><i class="status-dot pending"></i> probing</span></div>
+          </section>
+        </aside>
+      </div>
+
+      <footer class="footer-line"><span>NTR LOCAL CHAIN</span><span>SQLite · WAL <i></i> DIFFICULTY <b id="footer-difficulty">4</b></span><span>127.0.0.1 ONLY</span></footer>
+    </main>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
